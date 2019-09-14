@@ -1,0 +1,103 @@
+{% extends "layout.html" %}
+{% block body %}
+
+        <form action="{{ url_for('qna', mode = "asking" )}}" method =post>
+    <div class="input-group" style="width: 100%; margin: 0 auto">
+
+        <div class="control-group">
+        <div class="controls">
+          <label for="title">질문자</label><input type="text" id="user" name="user" class="form-control"
+            placeholder="질문자"
+            required>
+        </div><br>
+        </div>
+
+
+    <div class="control-group">
+        <div class="controls">
+            <label for="body">질문내용</label>
+            <textarea class="summernote" name="contents" id="contents"></textarea>
+        </div>
+    </div><br>
+      <button type="submit" class="btn btn-primary">질문하기</button>
+    </div>
+    </form>
+
+
+
+
+    <h1>불편하거나 개선했으면 좋겠는걸 말씀해주세요</h1>
+    <table class = "table table-hover"  style="width: 100%">
+    <tr>
+        <th style="width: 5em">질문자</th>
+        <th>질문내용</th>
+    </tr>
+    {%- for i in contents %}
+        <tr>
+            <td>{{i.user }}</td>
+            <td>{{ i.contents|safe}}
+
+               <a href="javascript:void(0);" data-parent="#accordion" data-toggle="collapse" data-target="#{{i.qna_num}}th_collapse"  style="font-size: small" > 답글쓰기 </a>
+                <div id="{{i.qna_num}}th_collapse" class="collapse" >
+                <form action="{{ url_for('qna', mode = "reply", page = page )}}" method=post class="form-horizontal">
+
+
+                        <input type="text" name="user" style="width: 15%;" placeholder= "작성자">
+                    <input type="text" name="contents" style="width: 60%; margin-right: 2em" placeholder = "답글내용">
+                    <input class="hidden" name ="qna_num" value="{{i.qna_num}}">
+                <button type="submit" class="btn btn-primary">답글달기</button>
+                </form>
+
+
+
+            </div>
+
+
+                    {%  for j in  replying%}
+                        {%  if i.qna_num == j.qna_num %}
+                            <hr>
+                            <h5 style="font-weight: bold;"> <span class="glyphicon glyphicon-triangle-right" aria-hidden="true"></span>{{ j.user }}</h5>
+                            {{ j.contents }}
+                        {%  endif %}
+
+                    {% endfor %}
+
+
+            </td>
+
+
+
+
+        </tr>
+
+    {%- endfor %}
+
+    </table>
+
+<nav aria-label="Page navigation example">
+  <ul class="pagination">
+      {% if max_page-page< 10   %}
+
+        <li class="page-item"><a class="page-link" href={{ url_for('qna', page = ((max_page/10)|round|int)*1) }}>Previous</a></li>
+          {%-  for j in range(((max_page/10)|round|int)*1 + 1,max_page +1) %}
+        <li class="page-item"><a class="page-link" href={{ url_for('qna', page =j )}}>{{ j }}</a></li>
+          {%- endfor %}
+        <li class="page-item"><a class="page-link" href={{ url_for('qna', page = max_page) }}>Next</a></li>
+
+      {% else %}
+
+        <li class="page-item"><a class="page-link" href={{ url_for('qna', page = ((page/10)|round|int)*1) }}>Previous</a></li>
+          {%-  for j in range(((page/10)|round|int)*1 + 1,((page/10)|round|int)*1 + 9) %}
+        <li class="page-item"><a class="page-link" href={{ url_for('qna', page =j )}}>{{ j }}</a></li>
+          {%- endfor %}
+        <li class="page-item"><a class="page-link" href={{ url_for('qna', page = ((page/10)|round|int)*1+10) }}>Next</a></li>
+
+      {% endif %}
+  </ul>
+</nav>
+
+{% endblock %}
+
+
+
+

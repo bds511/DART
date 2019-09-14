@@ -1,0 +1,63 @@
+{% extends "layout.html" %}
+{% block body %}
+
+
+
+<form action="/Product">
+    <div class="input-group" style="width: 30em; margin: 0 auto">
+        <select class="form-control" id="search_type" name="Issure" style="display: inline; width: 10em">
+            <option id = "삼성증권" value="삼성증권">삼성증권</option>
+            <option id = "한국투자증권" value="한국투자증권">한국투자증권</option>
+            <option id = "미래에셋대우" value="미래에셋대우">미래에셋대우</option>
+            <option id = "KB증권" value="KB증권">KB증권</option>
+            <option id = "대신증권" value="대신증권">대신증권</option>
+            <option id = "NH투자증권" value="NH투자증권">NH투자증권</option>
+            <option id = "하나금융투자" value="하나금융투자">하나금융투자</option>
+            <option id = "신한금융투자" value="신한금융투자">신한금융투자</option>
+            <option id = "신영증권" value="신영증권">신영증권</option>
+        </select>
+        <input class="form-control" id="date" type="date" name = "date" value = {{ date }}>
+
+
+
+
+      <button class="btn btn-default" type="submit">
+        <i class="glyphicon glyphicon-search"></i>
+      </button>
+
+
+
+  </div>
+
+
+</form>
+
+
+    <table class = "table table-hover" style="width: 100%">
+    <tr>
+        <th>상품명</th>
+        <th>발행일</th>
+        <th>pdf다운</th>
+    </tr>
+    {%- for i in contents %}
+        <tr>
+            <td><a href = {{ i.OAddress }}>{{ i.Title }}</a></td>
+            <td>{{ i.발행일}}</td>
+            <td><a href={{i.PDFAddress}}> pdf다운</a></td>
+
+        </tr>
+
+    {%- endfor %}
+
+    </table>
+    <script>
+        document.getElementById("{{Issure}}").selected = true;
+    </script>
+    <a href="{{ url_for('Get_CSV', Issure = Issure, date = date, type =1)}}" ><button type="button" class="btn btn-default sbt">다운로드 CSV</button></a>
+    <a href="{{ url_for('Get_CSV', Issure = Issure, date = date, type =2)}}" ><button type="button" class="btn btn-default sbt">다운로드 CSV2</button></a>
+    <a href="{{ url_for('Get_URL', date = date)}}" ><button type="button" class="btn btn-default sbt">그날전체list</button></a>
+{% endblock %}
+
+
+
+
